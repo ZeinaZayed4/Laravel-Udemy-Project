@@ -1,5 +1,6 @@
 @php
     $sidebarCategories = \App\Models\Category::get();
+    $recentBlogs = \App\Models\Blog::latest()->take(3)->get();
 @endphp
 <div class="col-lg-4 sidebar-widgets">
     <div class="widget-wrap">
@@ -33,7 +34,7 @@
                         <li>
                             <a href="{{ route('theme.category', ['id' => $category->id]) }}" class="d-flex justify-content-between">
                                 <p>{{ $category->name }}</p>
-                                <p>(03)</p>
+                                <p>({{ count($category->blogs) }})</p>
                             </a>
                         </li>
                     @endforeach
@@ -41,54 +42,28 @@
             @endif
         </div>
 
-        <div class="single-sidebar-widget popular-post-widget">
-            <h4 class="single-sidebar-widget__title">Recent Post</h4>
-            <div class="popular-post-list">
-                <div class="single-post-list">
-                    <div class="thumb">
-                        <img class="card-img rounded-0" src="{{ asset('assets/') }}/img/blog/thumb/thumb1.png" alt="">
-                        <ul class="thumb-info">
-                            <li><a href="#">Adam Colinge</a></li>
-                            <li><a href="#">Dec 15</a></li>
-                        </ul>
-                    </div>
-                    <div class="details mt-20">
-                        <a href="blog-single.html">
-                            <h6>Accused of assaulting flight attendant miktake alaways</h6>
-                        </a>
-                    </div>
-                </div>
-                <div class="single-post-list">
-                    <div class="thumb">
-                        <img class="card-img rounded-0" src="{{ asset('assets/') }}/img/blog/thumb/thumb2.png" alt="">
-                        <ul class="thumb-info">
-                            <li><a href="#">Adam Colinge</a></li>
-                            <li><a href="#">Dec 15</a></li>
-                        </ul>
-                    </div>
-                    <div class="details mt-20">
-                        <a href="blog-single.html">
-                            <h6>Tennessee outback steakhouse the
-                                worker diagnosed</h6>
-                        </a>
-                    </div>
-                </div>
-                <div class="single-post-list">
-                    <div class="thumb">
-                        <img class="card-img rounded-0" src="{{ asset('assets/') }}/img/blog/thumb/thumb3.png" alt="">
-                        <ul class="thumb-info">
-                            <li><a href="#">Adam Colinge</a></li>
-                            <li><a href="#">Dec 15</a></li>
-                        </ul>
-                    </div>
-                    <div class="details mt-20">
-                        <a href="blog-single.html">
-                            <h6>Tennessee outback steakhouse the
-                                worker diagnosed</h6>
-                        </a>
-                    </div>
+        @if(count($recentBlogs) > 0)
+            <div class="single-sidebar-widget popular-post-widget">
+                <h4 class="single-sidebar-widget__title">Recent Blogs</h4>
+                <div class="popular-post-list">
+                    @foreach($recentBlogs as $blog)
+                        <div class="single-post-list">
+                            <div class="thumb">
+                                <img class="card-img rounded-0" src="{{ asset("storage/blogs/$blog->image") }}" alt="">
+                                <ul class="thumb-info">
+                                    <li><a href="#">{{ $blog->user->name }}</a></li>
+                                    <li><a href="#">{{ $blog->created_at->format('d M Y') }}</a></li>
+                                </ul>
+                            </div>
+                            <div class="details mt-20">
+                                <a href="{{ route('blogs.show', ['blog' => $blog]) }}">
+                                    <h6>{{ $blog->name }}</h6>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>

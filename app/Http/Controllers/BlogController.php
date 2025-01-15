@@ -14,15 +14,7 @@ class BlogController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->only(['create']);
-    }
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+//        $this->middleware('auth')->only(['create']);
     }
 
     /**
